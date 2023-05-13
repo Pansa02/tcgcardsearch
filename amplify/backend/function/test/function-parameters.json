@@ -1,0 +1,11 @@
+{
+  "lambdaLayers": [
+    {
+      "type": "ExternalLayer",
+      "arn": "arn:aws:lambda:us-east-1:324603465804:layer:testAxiomLayer:1"
+    }
+  ],
+  "secretNames": [
+    "ebayAPIKey"
+  ]
+}

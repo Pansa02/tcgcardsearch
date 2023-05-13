@@ -1,0 +1,20 @@
+{
+  "e": [
+    {
+      "Card Name": "Black Lotus",
+      "Exclusionary Words": "foil, alpha",
+      "Max Price": "$500",
+      "Free Shipping": true,
+      "Immediate Buyout Only": true,
+      "Aucton End Time": "3/5/3"
+    },
+    {
+      "Card Name": "123",
+      "Exclusionary Words": "foil",
+      "Max Price": "$150",
+      "Free Shipping": false,
+      "Immediate Buyout Only": true,
+      "Aucton End Time": "5/13/14"
+    }
+  ]
+}

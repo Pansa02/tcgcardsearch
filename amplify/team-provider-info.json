@@ -1,0 +1,27 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tcgcardsearch-staging-14358-authRole",
+      "UnauthRoleArn": "arn:aws:iam::324603465804:role/amplify-tcgcardsearch-staging-14358-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::324603465804:role/amplify-tcgcardsearch-staging-14358-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-tcgcardsearch-staging-14358-deployment",
+      "UnauthRoleName": "amplify-tcgcardsearch-staging-14358-unauthRole",
+      "StackName": "amplify-tcgcardsearch-staging-14358",
+      "StackId": "arn:aws:cloudformation:us-east-1:324603465804:stack/amplify-tcgcardsearch-staging-14358/574f7ac0-ce9c-11ed-ab14-0ecbf22c9d87",
+      "AmplifyAppId": "d2ryorzt292cgy"
+    },
+    "categories": {
+      "function": {
+        "test": {
+          "deploymentBucketName": "amplify-tcgcardsearch-staging-14358-deployment",
+          "s3Key": "amplify-builds/test-32432b3655664e334474-build.zip",
+          "secretsPathAmplifyAppId": "d2ryorzt292cgy"
+        }
+      },
+      "api": {
+        "cardSearch": {}
+      }
+    }
+  }
+}
