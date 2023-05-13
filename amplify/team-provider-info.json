@@ -15,7 +15,7 @@
       "function": {
         "test": {
           "deploymentBucketName": "amplify-tcgcardsearch-staging-14358-deployment",
-          "s3Key": "amplify-builds/test-4c445a68707246787165-build.zip",
+          "s3Key": "amplify-builds/test-38624359516468307576-build.zip",
           "secretsPathAmplifyAppId": "d2ryorzt292cgy"
         }
       },
