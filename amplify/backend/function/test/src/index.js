@@ -42,82 +42,133 @@ function setCondition(conditionVal, catchVal) {
     }
 }
 
+
+
 exports.handler = async (event) => {
+    
     const apikey = await getApiKey()
     
-    let cardResponse = 'cardResponse :\n'
+    let cardResponse = ''
     
-    const responseBody = event['e'];
+    const convertedBody = JSON.parse(event.body)
+    console.log(convertedBody['dateTime'])
+    const responseBody = convertedBody['e'];
     
     for (let i = 0; i < responseBody.length; i++) {
         let cardName = responseBody[i]["Card Name"]
         let exclusionaryWords = responseBody[i]["Exclusionary Words"]
         let maxPrice = responseBody[i]["Max Price"].replace('$', '')
-        let freeShipping = responseBody[i]["Free Shipping"]
-        let immediateBuyout = responseBody[i]["Immediate Buyout Only"]
+        let freeShipping = (responseBody[i]["Free Shipping"] === true)
+        let immediateBuyout = (responseBody[i]["Immediate Buyout Only"] === true)
         let auctionEndTime = responseBody[i]["Aucton End Time"]
+        let endTimeArr = auctionEndTime.split("/")
         
-        const url = ("https://svcs.ebay.com/services/search/FindingService/v1\
+        
+        const apiUrlMain = "https://svcs.ebay.com/services/search/FindingService/v1\
 ?OPERATION-NAME=findItemsAdvanced\
 &sortOrder=PricePlusShippingLowest\
-&buyerPostalCode=92128&SERVICE-VERSION=1.13.0\
+&buyerPostalCode=02723&SERVICE-VERSION=1.13.0\
 &SECURITY-APPNAME=" + apikey +
 "&RESPONSE-DATA-FORMAT=JSON\
 &REST-PAYLOAD\
 &descriptionSearch=false\
 &categoryId=183454\
-&categoryName=CCG%20Individual%20Cards\
-&itemFilter(0).name=MaxPrice\
-&itemFilter(0).value=" + maxPrice +
-"&itemFilter(0).paramName=Currency\
-&itemFilter(0).paramValue=USD\
-&keywords=" + cardName)
-        // const apiResult = await fetch(url)
-        // .then(data=>{return data.json()})
-        // .then(res=>{console.log(res)})
-        // .catch(error=>console.log(error))
-        // const apiResult = await getUrlResponse(url)
+&categoryName=CCG%20Individual%20Cards"
+        
+        
+        exclusionaryWords = exclusionaryWords.replace(",", "")
+        const exclusionaryWordsArr = exclusionaryWords.split(" ")
+        
+        if (exclusionaryWords !== "") {
+            for (let i = 0; i < exclusionaryWordsArr.length; i++) {
+                cardName = cardName + " -" + exclusionaryWordsArr[i]
+            }
+        }
+
+        let url = apiUrlMain
+        
+        let itemFilterGroup = 0
+        
+        if (maxPrice !== '') {
+            url = url + "&itemFilter(" + String(itemFilterGroup) + ").name=MaxPrice&itemFilter(0).value=" + maxPrice +"&itemFilter(" + String(itemFilterGroup) + ").paramName=Currency&itemFilter(" + String(itemFilterGroup) +").paramValue=USD"
+            itemFilterGroup++
+        }
+        
+        if (freeShipping === true) {
+            url = url + "&itemFilter(" + String(itemFilterGroup) + ").name=FreeShippingOnly&itemFilter(" + String(itemFilterGroup) + ").value=true"
+            itemFilterGroup++
+        }
+        
+        const apiUrlCard = "&keywords=" + cardName
+        
+        
+        if (auctionEndTime !== "//") {
+            var addTime = function(str, days, hours, minutes) {
+                days = days === "" ? "0" : days
+                hours = hours === "" ? "0" : hours
+                minutes = minutes === "" ? "0" : minutes
+                console.log(days + hours + minutes)
+              var myDate = new Date(str);
+              myDate.setDate(myDate.getDate() + parseInt(days));
+              myDate.setHours(myDate.getHours() + parseInt(hours))
+              myDate.setMinutes(myDate.getMinutes() + parseInt(minutes))
+              myDate.toISOString()
+              console.log(myDate)
+              return myDate;
+            }
+            var adjustedTimeLeft = addTime(convertedBody['dateTime'], endTimeArr[0], endTimeArr[1], endTimeArr[2])
+            
+            const apiUrlTimeLeft = "&itemFilter(" + String(itemFilterGroup) + ").name=EndTimeTo&itemFilter(" + String(itemFilterGroup) + ").value=" + adjustedTimeLeft.toISOString()
+            
+            url = url + apiUrlTimeLeft
+        }
+        
+        
+        url = url + apiUrlCard
+        console.log(url)
+
         let apiResult = []
         await axios.get(url)
             .then(result => {
+                console.log(result.data.findItemsAdvancedResponse[0]["ack"])
+                // console.log(result.data.findItemsAdvancedResponse[0]["errorMessage"][0]["error"])
                 apiResult =  result.data
             })
             .catch(error => {
-                console.log("THIS IS AN ERROR!!")
                 console.log(error)
             })
         
-        console.log(apiResult)
-        console.log(apiResult.findItemsAdvancedResponse[0].searchResult[0])
-        console.log(apiResult.findItemsAdvancedResponse[0].searchResult[0].item[0])
-        
         const itemsList = apiResult.findItemsAdvancedResponse[0].searchResult[0].item
         
-        // for (let x = 0; x < itemsList.length; x++) {
-        //     console.log(itemsList[x]['title'][0])
-        // }
-        console.log(itemsList[0])
-        
+        cardResponse = cardResponse + "-----------" + cardName.toUpperCase() + "-----------\n\n"
         if (apiResult.findItemsAdvancedResponse[0].searchResult[0]['@count'] !== '0') {
-            console.log("@count > 0")
             for (let x = 0; x < itemsList.length; x++) {
                 
+                if (immediateBuyout === true) {
+                    if (itemsList[x]["listingInfo"][0].buyItNowAvailable[0] !== "true" && itemsList[x]["listingInfo"][0].listingType[0] !== "FixedPrice") {
+                        continue;
+                    }
+                }
+                
+                console.log(itemsList[x]["listingInfo"][0])
+                
                 const title = itemsList[x]['title'][0]
-                const condition = setCondition(() => itemsList[x]["condition"][0])
+                const condition = setCondition(() => itemsList[x]["condition"][0].conditionDisplayName[0])
                 const price = itemsList[x]["sellingStatus"][0].convertedCurrentPrice[0]['__value__']
                 const shipping = itemsList[x]["shippingInfo"][0].shippingServiceCost[0]['__value__'] + " " + itemsList[x]["shippingInfo"][0].shippingServiceCost[0]['@currencyId']
                 const timeLeft = itemsList[x]["sellingStatus"][0].timeLeft[0]
                 const itemUrl = itemsList[x]["viewItemURL"][0]
                 
+                
                 cardResponse = cardResponse + "Card: " + title + "\n" + "Price: " + "$" + price + "\n" + "Condition: " + condition + "\n" + "Time left: " + timeLeft + "\n" + "shipping: " + shipping + "\n" + itemUrl + '\n\n'
+            
             }
         } else {
-            console.log("No matches for " + cardName)
+            cardResponse = cardResponse + "No matches for " + cardName
         }
         
 
     }
-    console.log(cardResponse)
     
     
     
@@ -129,8 +180,8 @@ exports.handler = async (event) => {
          "Access-Control-Allow-Origin": "*",
          "Access-Control-Allow-Headers": "*",
      }, 
-        body: JSON.stringify(cardResponse),
-        // body: JSON.stringify(responseBody),
+        body: await JSON.stringify(cardResponse),
     };
-    return response;
+    console.log(response)
+    return await response;
 };
