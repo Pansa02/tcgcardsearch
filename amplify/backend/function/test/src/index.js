@@ -125,7 +125,6 @@ exports.handler = async (event) => {
         
         
         url = url + apiUrlCard
-        console.log(url)
 
         let apiResult = []
         await axios.get(url)
@@ -149,8 +148,6 @@ exports.handler = async (event) => {
                         continue;
                     }
                 }
-                
-                console.log(itemsList[x]["listingInfo"][0])
                 
                 const title = itemsList[x]['title'][0]
                 const condition = setCondition(() => itemsList[x]["condition"][0].conditionDisplayName[0])
