@@ -1,40 +1,33 @@
-import React, {
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import { NewForm1 } from "../ui-components";
 
 export let cards = [];
 let clickNumber = 0;
 
-
 const Content8 = () => {
-  
-
   const [card, setCard] = useState();
 
   const handleCardRemove = (index) => {
     const cardsList = [...cards];
     const child = document.getElementById(index);
     const indexToRemove = cards.findIndex(function x(item) {
-      item.cardValue = child
-      return item.cardValue
-    })
+      item.cardValue = child;
+      return item.cardValue;
+    });
     cardsList.splice(indexToRemove, 1);
     cards = cardsList;
     child.parentElement.remove();
-    console.log(cards)
+    console.log(cards);
   };
-  
+
   useEffect(() => {
     const cardList = document.querySelector("#cardList");
     cards.push(card);
     if (clickNumber === 0) {
-      let nullRemove = cards.slice(1)
-      cards = nullRemove
+      let nullRemove = cards.slice(1);
+      cards = nullRemove;
     }
-    console.log(cards)
-    
+    console.log(cards);
 
     if (clickNumber !== 0) {
       const div_inner = document.createElement("div");

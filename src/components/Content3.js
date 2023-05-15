@@ -1,28 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { Amplify, API } from 'aws-amplify';
-
-const myAPI = "cardSearch"
-const path = "/search"
+import React from "react";
 
 const Content3 = () => {
-  const [results, displayResults] = useState([])
+  return <div id="resultContainer"></div>;
+};
 
-  function getData(e) {
-    let data = e.input
-    API.get(myAPI, path)
-      .then(response => {
-        console.log(response)
-        let result = [...results]
-        result.push(response)
-        displayResults(result)
-      })
-  }
-
-  return (
-    <div id='resultContainer'>
-      
-    </div>
-  )
-}
-
-export default Content3
+export default Content3;
