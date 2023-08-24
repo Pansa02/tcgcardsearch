@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tcg-card-search-deploymnet
+  labels:
+    app: tcg-card-search
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tcg-card-search
+  template:
+    metadata:
+      labels:
+        app: tcg-card-search
+    spec:
+      containers:
+      - name: tcg-card-search
+        image: pansa02/tcg-card-search:v2
+        ports:
+        - containerPort: 3000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tcg-card-search-service
+spec:
+  type: LoadBalancer
+  selector:
+   app: tcg-card-search
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: tcg-card-search

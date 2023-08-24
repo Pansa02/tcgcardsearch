@@ -20,17 +20,33 @@ Parameters will be of the form { Name: 'secretName', Value: 'secretValue', ... }
 const axios = require("axios");
 
 async function getApiKey() {
-  const aws = require("aws-sdk");
-  const { Parameters } = await new aws.SSM()
-    .getParameters({
-      Names: ["ebayAPIKey"].map((secretName) => process.env[secretName]),
-      WithDecryption: true,
-    })
-    .promise();
+  const { SSMClient, GetParameterCommand } = require("@aws-sdk/client-ssm");
+  const client = new SSMClient();
+  const input = { // GetParameterRequest
+    Name: "ebayAPIKey", // required
+    WithDecryption: true
+  };
+  const command = new GetParameterCommand(input);
+  const response = await client.send(command);
 
-  const apiKey = Parameters.pop().Value;
-  return apiKey;
+  await console.log(response.Parameter.Name)
+  const apiKey = await response.Parameter.Value;
+  return await apiKey;
 }
+// async function getApiKey() {
+//   const {
+//     SSM
+//   } = require("@aws-sdk/client-ssm");
+//   const { Parameters } = await new SSM()
+//     .getParameters({
+//       Names: ["ebayAPIKey"].map((secretName) => process.env[secretName]),
+//       WithDecryption: true,
+//     })
+//     .promise();
+
+//   const apiKey = Parameters.pop().Value;
+//   return apiKey;
+// }
 
 function setCondition(conditionVal, catchVal) {
   try {
@@ -42,15 +58,17 @@ function setCondition(conditionVal, catchVal) {
 }
 
 exports.handler = async (event) => {
-  console.log(event.body);
+
+  console.log(event.body)
 
   const apikey = await getApiKey();
 
   let cardResponse = "";
 
   const convertedBody = JSON.parse(event.body);
-  console.log(convertedBody["dateTime"]);
-  const responseBody = convertedBody["e"];
+  console.log(convertedBody["body"]["dateTime"]);
+  const responseBody = convertedBody["body"]["e"];
+  console.log(responseBody);
 
   for (let i = 0; i < responseBody.length; i++) {
     let cardName = responseBody[i]["Card Name"];
@@ -130,7 +148,7 @@ apikey +
         return myDate;
       };
       var adjustedTimeLeft = addTime(
-        convertedBody["dateTime"],
+        convertedBody["body"]["dateTime"],
         endTimeArr[0],
         endTimeArr[1],
         endTimeArr[2]

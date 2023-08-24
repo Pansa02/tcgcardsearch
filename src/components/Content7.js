@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { API } from "aws-amplify";
 import { cards } from "./Content8";
+import axios, {isCancel, AxiosError} from 'axios';
 
-const myAPI = "cardSearch";
-const myPath = "/search";
+const myAPI = "https://e6cptfzi71.execute-api.us-east-1.amazonaws.com/beta";
+const myPath = "/submit";
+// const myAPI = "cardSearch";
+// const myPath = "/search";
 
 let data = cards;
 
@@ -33,18 +36,32 @@ const Content7 = () => {
     div_inner.innerHTML = "<strong>Getting results, please wait...</strong>";
     displayResults(results);
 
-    return await API.post(apiName, path, myInit).then((response) => {
+    
+
+    return await axios.put(apiName + path, myInit).then((response) => {
       document.querySelector("#result").remove();
-      console.log(response);
+      console.log(response.data);
 
       const div_inner = document.createElement("div");
       div_inner.setAttribute("id", "result");
 
       cardList.appendChild(div_inner);
-      div_inner.innerText = response;
+      div_inner.innerText = response.data;
 
       displayResults(results);
     });
+    // return await API.post(apiName, path, myInit).then((response) => {
+    //   document.querySelector("#result").remove();
+    //   console.log(response);
+
+    //   const div_inner = document.createElement("div");
+    //   div_inner.setAttribute("id", "result");
+
+    //   cardList.appendChild(div_inner);
+    //   div_inner.innerText = response;
+
+    //   displayResults(results);
+    // });
   }
 
   return (
