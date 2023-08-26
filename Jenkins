@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+    tools {
+        nodejs '20.5.1'
+    }
+    stages {
+
+        stage('Build') { 
+            steps {
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Pansa02/tcgcardsearch.git']])
+                sh 'npm install'
+            }
+        }
+    }
+}
+
