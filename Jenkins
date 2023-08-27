@@ -1,20 +1,45 @@
 pipeline {
     agent any
-    tools {
-        nodejs '20.5.1'
-  }
-    stages {
-        stage('Fetch Code') {
-            steps {
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Pansa02/tcgcardsearch.git']])
-            }
-        }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('pansa02-dockerhub')
+    }
+    // stages {
+    //     stage('Fetch Code') {
+    //         steps {
+    //             checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Pansa02/tcgcardsearch.git']])
+    //         }
+    //     }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t v${BUILD_NUMBER} .'
+                sh 'docker build -t pansa02/tcg_card_search:v${BUILD_NUMBER} .'
+            }
+        }
+
+        stage('Login') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+
+        stage('Push') {
+            steps {
+                sh 'docker push pansa02/tcg_card_search:v${BUILD_NUMBER}'
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                sh 'docker rmi pansa02/tcg_card_search:v${BUILD_NUMBER}'
             }
         }
     }
+    post {
+        always {
+            sh 'docker logout'
+        }
+    }
 }
-
