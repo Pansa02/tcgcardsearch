@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-    'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'Docker'
+        nodejs '20.5.1'
   }
     stages {
         stage('Fetch Code') {
