@@ -1,14 +1,18 @@
 pipeline {
     agent any
     tools {
-        nodejs '20.5.1'
-    }
+    'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'Docker'
+  }
     stages {
-
-        stage('Build') { 
+        stage('Fetch Code') {
             steps {
                 checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Pansa02/tcgcardsearch.git']])
-                sh 'npm install'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t v${BUILD_NUMBER} .'
             }
         }
     }
