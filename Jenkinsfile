@@ -7,7 +7,6 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('pansa02-dockerhub')
     }
     stages {
-
         // stage('Fetch Code') {
         //     steps {
         //         checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Pansa02/tcgcardsearch.git']])
