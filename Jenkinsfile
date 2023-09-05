@@ -15,32 +15,32 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t pansa02/tcg_card_search:v${BUILD_NUMBER} .'
+                sh 'sudo docker build -t pansa02/tcg_card_search:v${BUILD_NUMBER} .'
             }
         }
 
         stage('Login') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
 
         stage('Push') {
             steps {
-                sh 'docker push pansa02/tcg_card_search:v${BUILD_NUMBER}'
+                sh 'sudo docker push pansa02/tcg_card_search:v${BUILD_NUMBER}'
             }
         }
 
         stage('Update latest image') {
             steps {
-                sh 'docker tag push pansa02/tcg_card_search:v${BUILD_NUMBER} pansa02/tcg_card_search:latest'
-                sh 'docker push pansa02/tcg_card_search:latest'
+                sh 'sudo docker tag push pansa02/tcg_card_search:v${BUILD_NUMBER} pansa02/tcg_card_search:latest'
+                sh 'sudo docker push pansa02/tcg_card_search:latest'
             }
         }
 
         stage('Clean') {
             steps {
-                sh 'docker rmi pansa02/tcg_card_search:v${BUILD_NUMBER}'
+                sh 'sudo docker rmi pansa02/tcg_card_search:v${BUILD_NUMBER}'
             }
         }
     }
