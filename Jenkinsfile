@@ -31,6 +31,13 @@ pipeline {
             }
         }
 
+        stage('Update latest image') {
+            steps {
+                sh 'docker tag push pansa02/tcg_card_search:v${BUILD_NUMBER} pansa02/tcg_card_search:latest'
+                sh 'docker push pansa02/tcg_card_search:latest'
+            }
+        }
+
         stage('Clean') {
             steps {
                 sh 'docker rmi pansa02/tcg_card_search:v${BUILD_NUMBER}'

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: tcg-card-search
-        image: pansa02/tcg-card-search:v2
+        image: pansa02/tcg-card-search:latest
         ports:
         - containerPort: 3000
 
