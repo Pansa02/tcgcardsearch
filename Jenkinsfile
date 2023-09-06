@@ -47,7 +47,7 @@ pipeline {
         stage('ansible') {
             steps {
                 // sh 'ansible-playbook -i inventory tcgApp-playbook.yml'
-                ansiblePlaybook becomeUser: 'ubuntu', credentialsId: 'kops-creds', installation: 'Ansible', inventory: '/var/lib/jenkins/inventory', playbook: '/var/lib/jenkins/ansible/tcgApp-playbook.yml', sudoUser: 'ubuntu'
+                ansiblePlaybook becomeUser: 'ubuntu', credentialsId: 'kops-creds', installation: 'Ansible', inventory: 'inventory', playbook: 'tcgApp-playbook.yml', sudoUser: 'ubuntu'
             }
         }
 
