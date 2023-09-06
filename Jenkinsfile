@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'sudo docker build -t pansa02/tcg_card_search:v${BUILD_NUMBER} .'
+                sh 'sudo docker build -t pansa02/tcg-card-search:v${BUILD_NUMBER} .'
             }
         }
 
@@ -27,21 +27,21 @@ pipeline {
 
         stage('Push') {
             steps {
-                sh 'sudo docker push pansa02/tcg_card_search:v${BUILD_NUMBER}'
+                sh 'sudo docker push pansa02/tcg-card-search:v${BUILD_NUMBER}'
             }
         }
 
         stage('Update latest image') {
             steps {
-                sh 'sudo docker tag pansa02/tcg_card_search:v${BUILD_NUMBER} pansa02/tcg_card_search:latest'
-                sh 'sudo docker push pansa02/tcg_card_search:latest'
+                sh 'sudo docker tag pansa02/tcg-card-search:v${BUILD_NUMBER} pansa02/tcg-card-search:latest'
+                sh 'sudo docker push pansa02/tcg-card-search:latest'
             }
         }
 
         stage('Clean') {
             steps {
-                sh 'sudo docker rmi pansa02/tcg_card_search:v${BUILD_NUMBER}'
-                sh 'sudo docker rmi pansa02/tcg_card_search:latest'
+                sh 'sudo docker rmi pansa02/tcg-card-search:v${BUILD_NUMBER}'
+                sh 'sudo docker rmi pansa02/tcg-card-search:latest'
             }
         }
     }
