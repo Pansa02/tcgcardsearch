@@ -33,7 +33,7 @@ pipeline {
 
         stage('Update latest image') {
             steps {
-                sh 'sudo docker tag push pansa02/tcg_card_search:v${BUILD_NUMBER} pansa02/tcg_card_search:latest'
+                sh 'sudo docker tag pansa02/tcg_card_search:v${BUILD_NUMBER} pansa02/tcg_card_search:latest'
                 sh 'sudo docker push pansa02/tcg_card_search:latest'
             }
         }
