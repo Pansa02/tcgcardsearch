@@ -4,10 +4,10 @@
   become: true
   tasks:
   
-  - name: push tcgApp.yml
+  - name: push tcgApp.yaml
     ansible.builtin.copy:
-    src: tcgApp.yml
-    dest: /home/ubuntu/tcgApp.yml
+    src: tcgApp.yaml
+    dest: /home/ubuntu/tcgApp.yaml
 
   - name: run kubectl apply
     ansible.builtin.script: tcg-update.sh
