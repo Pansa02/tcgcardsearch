@@ -39,11 +39,15 @@ pipeline {
         }
 
         stage('sed tcgApp.yml') {
-            sed 's/latest/v${BUILD_NUMBER}/' tcgApp.yml
+            steps {
+                sed 's/latest/v${BUILD_NUMBER}/' tcgApp.yml
+            }
         }
 
         stage('ansible') {
-            sh 'ansible-playbook --become tcgApp-playbook.yml'
+            steps {
+                sh 'ansible-playbook --become tcgApp-playbook.yml'
+            }
         }
 
         stage('Clean') {
