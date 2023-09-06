@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+  
+  - name: push tcgApp.yml
+    ansible.builtin.copy:
+    src: tcgApp.yml
+    dest: /home/ubuntu/tcgApp.yml
+
+  - name: run kubectl apply
+    ansible.builtin.script: tcg-update.sh

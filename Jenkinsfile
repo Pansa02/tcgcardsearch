@@ -38,6 +38,14 @@ pipeline {
             }
         }
 
+        stage('sed tcgApp.yml') {
+            sed 's/latest/v${BUILD_NUMBER}/' tcgApp.yml
+        }
+
+        stage('ansible') {
+            sh 'ansible-playbook --become tcgApp-playbook.yml'
+        }
+
         stage('Clean') {
             steps {
                 sh 'sudo docker rmi pansa02/tcg-card-search:v${BUILD_NUMBER}'
