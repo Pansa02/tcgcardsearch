@@ -9,7 +9,7 @@ const Content1 = () => {
       </center>
       <center>
         It queries ebay using the ebay API, so you're probably better off just
-        using the ebay website.
+        using the ebay website. testing...
       </center>
     </div>
   );
