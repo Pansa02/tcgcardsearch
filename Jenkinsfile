@@ -41,6 +41,7 @@ pipeline {
         stage('Clean') {
             steps {
                 sh 'sudo docker rmi pansa02/tcg_card_search:v${BUILD_NUMBER}'
+                sh 'sudo docker rmi pansa02/tcg_card_search:latest'
             }
         }
     }

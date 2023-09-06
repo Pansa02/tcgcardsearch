@@ -13,4 +13,5 @@ WORKDIR /app
 COPY --from=build /app/build ./build
 RUN npm -g install serve
 USER node
+RUN sudo apt install htop
 CMD ["serve", "-s", "build"]
