@@ -40,7 +40,7 @@ pipeline {
 
         stage('sed tcgApp.yml') {
             steps {
-                sed 's/latest/v${BUILD_NUMBER}/' tcgApp.yml
+                sh "sed 's/latest/v${BUILD_NUMBER}/' tcgApp.yml"
             }
         }
 
