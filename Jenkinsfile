@@ -46,7 +46,7 @@ pipeline {
 
         stage('ansible') {
             steps {
-                sh 'ansible-playbook --become tcgApp-playbook.yml'
+                sh 'ansible-playbook -i inventory --become tcgApp-playbook.yml'
             }
         }
 
