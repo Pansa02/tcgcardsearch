@@ -3,3 +3,6 @@ node_modules
 README.md
 tcgApp.yaml
 Jenkins
+tcgApp-playbook.yml
+tcg-update.sh
+inventory
