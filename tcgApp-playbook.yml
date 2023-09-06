@@ -2,8 +2,8 @@
   
 - name: push tcgApp.yaml
   ansible.builtin.copy:
-  src: tcgApp.yaml
-  dest: /home/ubuntu/tcgApp.yaml
+    src: tcgApp.yaml
+    dest: /home/ubuntu/tcgApp.yaml
 
 - name: run kubectl apply
   ansible.builtin.script: tcg-update.sh
