@@ -61,6 +61,7 @@ pipeline {
     post {
         always {
             sh 'docker logout'
+            cleanWs(patterns: [[pattern: '**/tcgApp.yaml', type: 'INCLUDE']])
         }
     }
 }
