@@ -33,4 +33,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: tcg-card-search
+      targetPort: 3000
